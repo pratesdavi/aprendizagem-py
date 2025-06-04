@@ -1,44 +1,76 @@
 import pandas as pd
 
-# prompt: importrquivo xlsx
+def formatar_nomes_viagem(serie):
+    """
+    Formata nomes de viagem capitalizando corretamente cada palavra, 
+    mantendo exceções pré-definidas em minúsculas.
+    """
+    excecoes = {'de', 'da', 'do', 'dos', 'das', 'e'}
+    
+    def formatar_nome(nome):
+        if pd.isna(nome):
+            return nome
+            
+        palavras = nome.split()
+        formatado = []
+        for i, palavra in enumerate(palavras):
+            if (i > 0) and (palavra.lower() in excecoes):
+                formatado.append(palavra.lower())
+            else:
+                formatado.append(palavra.capitalize())
+        return ' '.join(formatado)
+    
+    return serie.apply(formatar_nome)
 
-import pandas as pd
-df = pd.read_excel('/content/arquivodeteste.xlsx')ar a
+def tratar_dataframe(caminho_entrada, caminho_saida, colunas_remover=None):
+    """
+    Processa um arquivo Excel: importa, trata os dados e exporta para Excel
+    """
+    try:
+        # Importação
+        df = pd.read_excel(caminho_entrada)
+        print("\nDados importados com sucesso!")
+        print(f"Colunas originais: {df.columns.tolist()}")
+        
+        # Remoção de colunas
+        colunas_remover = colunas_remover or []
+        colunas_existentes = [col for col in colunas_remover if col in df.columns]
+        
+        if colunas_existentes:
+            df = df.drop(columns=colunas_existentes)
+            print(f"Colunas removidas: {colunas_existentes}")
+        
+        # Formatação de dados
+        if 'TRAVEL' in df.columns:
+            df['TRAVEL'] = formatar_nomes_viagem(df['TRAVEL'])
+            print("Coluna 'TRAVEL' formatada")
+        
+        if 'PRICE' in df.columns:
+            df['PRICE'] = df['PRICE'].apply(
+                lambda x: f"R$ {x:,.2f}".replace(',', 'v').replace('.', ',').replace('v', '.') 
+                if pd.notnull(x) else x
+            )
+            print("Coluna 'PRICE' formatada")
+        
+        # Exportação
+        df.to_excel(caminho_saida, index=False)
+        print(f"\nArquivo tratado salvo em: {caminho_saida}")
+        print(f"Colunas finais: {df.columns.tolist()}")
+        
+        return df
+        
+    except Exception as e:
+        print(f"\nErro durante o processamento: {str(e)}")
+        return None
 
-# prompt: visualizar dataframe
-
-df = pd.read_excel('/content/arquivodeteste.xlsx')
-print(df)
-
-print(df.columns.tolist())
-
-# prompt: remover coluna TRAVEL
-
-df = df.drop(columns=['TICKET'])
-df
-
-# prompt: Corrigir valores de Travel, colocando como nomes próprios, só a primeira letra maiúscula
-
-df['TRAVEL'] = df['TRAVEL'].str.capitalize()
-df
-
-# prompt: Preciso do segundo nome esteja em maiusculo. Se São paulo, colocar São Paulo.
-
-def capitalize_second_name(name):
-    parts = name.split()
-    if len(parts) > 1:
-        # Capitalize the second part, and keep the first part as is
-        return f"{parts[0]} {' '.join(part.capitalize() for part in parts[1:])}"
-    return name
-
-df['TRAVEL'] = df['TRAVEL'].apply(capitalize_second_name)
-df
-
-
-# prompt: Coloco que o PRICE em REAL BR
-
-import pandas as pd
-df['PRICE'] = df['PRICE'].apply(lambda x: f"R$ {x:.2f}" if pd.notnull(x) else x)
-df
-
-print(df.columns.tolist())
+# Exemplo de uso:
+if __name__ == "__main__":
+    df_tratado = tratar_dataframe(
+        caminho_entrada='/content/arquivodeteste.xlsx',
+        caminho_saida='/content/arquivo_tratado.xlsx',
+        colunas_remover=['TICKET']
+    )
+    
+    if df_tratado is not None:
+        print("\nVisualização do DataFrame tratado:")
+        print(df_tratado.head())
