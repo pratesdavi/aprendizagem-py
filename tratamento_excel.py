@@ -16,3 +16,8 @@ print(df.columns.tolist())
 
 df = df.drop(columns=['TICKET'])
 df
+
+# prompt: Corrigir valores de Travel, colocando como nomes próprios, só a primeira letra maiúscula
+
+df['TRAVEL'] = df['TRAVEL'].str.capitalize()
+df
