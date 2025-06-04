@@ -40,3 +40,5 @@ df
 import pandas as pd
 df['PRICE'] = df['PRICE'].apply(lambda x: f"R$ {x:.2f}" if pd.notnull(x) else x)
 df
+
+print(df.columns.tolist())
