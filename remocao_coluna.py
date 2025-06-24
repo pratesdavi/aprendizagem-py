@@ -1,13 +1,11 @@
 """
-Script para Manipulação de Dados com Pandas
+Script param manipulação de dados com pandas
 
 OBJETIVO:
-  - Demonstrar a criação e manipulação básica de um DataFrame
-  - Ilustrar a remoção segura de colunas
-  - Fornecer exemplo didático para projetos de análise de dados
+  - demonstrar a criação e manipulação básica de um dataframe
+  - ilustrar a remoção segura de colunas
 
-Data: 02.05.2025
-Versão: 1.0
+Versao: 1
 """
 
 import pandas as pd
@@ -29,7 +27,7 @@ dados_exemplo = {
     'ticket': ['A123', 'B456', 'C789']
 }
 
-# Criar DataFrame a partir do dicionário
+# criar DataFrame a partir do dicionário
 df = pd.DataFrame(dados_exemplo)
 
 print("DataFrame Original:")
