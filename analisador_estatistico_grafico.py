@@ -1,18 +1,15 @@
 """
-analisador_estatistico_grafico.py
+ANALISADOR ESTATÍSTICO
 
 Um script interativo que coleta números, realiza análises estatísticas e gera visualizações gráficas.
 
-Funcionalidades:
+funcionalidades:
 1. Coleta números via entrada interativa
 2. Calcula estatísticas descritivas (média, mediana, desvio padrão, etc.)
 3. Gera múltiplos tipos de gráficos (linha, histograma, boxplot)
 4. Permite salvar os gráficos em diferentes formatos
 5. Oferece opção para exportar os dados coletados
 
-Autor: Seu Nome
-Data: 2023-10-15
-Versão: 1.0
 """
 
 import matplotlib.pyplot as plt
